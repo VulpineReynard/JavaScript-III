@@ -42,6 +42,25 @@ CharacterStats.prototype.takeDamage = function() {
   return this.name + " took damage.";
 }
 
+CharacterStats.prototype.attack = function(target) {
+  this.attackDmg = Math.floor((Math.random() * 50) + 1);
+  if(this.healthPoints > 0 && target.healthPoints > 0)
+  console.log(this.name + " attacks " + target.name + " with " + this.weapons + " for " + this.attackDmg + " points of damage.");
+
+  if (this.healthPoints <= 0) {
+    return this.name + " cannot attack, it is dead."
+  } else if (target.healthPoints <= 0) {
+    return this.name + " beats up " + target.name + "'s dead body."
+  } else {
+    target.healthPoints = target.healthPoints - this.attackDmg;
+    if (target.healthPoints <= 0 )
+    return this.name + " has killed " + target.name + "!";
+    
+    else
+    return target.name + " is still alive with " + target.healthPoints + " health points left"
+  }
+}
+
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
   * team
@@ -125,46 +144,46 @@ Humanoid.prototype.greet = function() {
 
 
   function Villian(villStats) {
+    CharacterStats.call(this, villStats);
     this.name = villStats.name;
-    this.health = villStats.health;
+    this.healthPoints = villStats.healthPoints;
     this.weapons = villStats.weapons;
     this.language = villStats.language;
     this.attackDmg = villStats.attackDmg;
+    this.remainingHealth = villStats.remainingHealth;
   }
+
+  Villian.prototype = Object.create(Humanoid.prototype);
   
   const javascript = new Villian({
-    name: 'javascript',
-    health: 9999,
-    weapons: 'demoralization',
+    name: 'Javascript',
+    healthPoints: 100,
+    weapons: 'Demoralization',
     language: 'idfk',
-    attackDmg: 99999999
+    attackDmg: Math.floor((Math.random() * 50) + 1),
+    remainingHealth: 100
   });
   
-  Villian.prototype.attack = function(target) {
-    target.healthPoints - this.attackDmg;
-
-    if (target.healthPoints <= 0) {
-      return target.name + " has died with " + target.healthPoints + " health points left."
-    } else {
-      return target.name + " is still alive with " + target.healthPoints + " health point left"
-    }
-  }
+  
   
   function Hero(heroStats) {
+    CharacterStats.call(this, heroStats);
     this.name = heroStats.name;
     this.healthPoints = heroStats.healthPoints;
     this.weapons = heroStats.weapons;
+    this.remainingHealth = heroStats.remainingHealth;
+    this.attackDmg = heroStats.attackDmg;
   }
+
+  Hero.prototype = Object.create(Humanoid.prototype);
   
   const web21 = new Hero({
-    name: 'web21',
-    healthPoints: 1,
-    weapons: 'Josh Knell'
+    name: 'Web21',
+    healthPoints: 100,
+    weapons: 'Josh Knell',
+    attackDmg: Math.floor((Math.random() * 50) + 1),
+    remainingHealth: 100
   });
-  
-  Villian.prototype = Object.create(Humanoid.prototype);
-  Hero.prototype = Object.create(Humanoid.prototype);
-  Hero.prototype = Object.create(Hero.prototype);
 
 
 
@@ -179,8 +198,16 @@ Humanoid.prototype.greet = function() {
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
+
+  // STRETCH
+  console.log(web21.attack(javascript));
   console.log(javascript.attack(web21));
-  console.log(web21.healthPoints);
+  console.log(web21.attack(javascript));
+  console.log(javascript.attack(web21));
+  console.log(web21.attack(javascript));
+  console.log(javascript.attack(web21));
+  console.log(web21.attack(javascript));
+  console.log(javascript.attack(web21));
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
